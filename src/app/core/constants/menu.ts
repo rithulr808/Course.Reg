@@ -7,9 +7,14 @@ export class Menu {
       separator: false,
       items: [
         {
+          icon: 'assets/icons/heroicons/outline/folder.svg',
+          label: 'Home',
+          route: '/home',
+        },
+        {
           icon: 'assets/icons/heroicons/outline/chart-pie.svg',
           label: 'Dashboard',
-          route: '/dashboard/nfts',
+          route: '/components/table',
         },
         {
           icon: 'assets/icons/heroicons/outline/lock-closed.svg',
@@ -31,12 +36,6 @@ export class Menu {
             { label: '404', route: '/errors/404' },
             { label: '500', route: '/errors/500' },
           ],
-        },
-        {
-          icon: 'assets/icons/heroicons/outline/cube.svg',
-          label: 'Components',
-          route: '/components',
-          children: [{ label: 'Table', route: '/components/table' }],
         },
       ],
     },
