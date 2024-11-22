@@ -7,5 +7,11 @@ export interface Nft {
   avatar?: string;
   instant_price?: number;
   ending_in?: string;
-  image: string;
+  image?: string;
+  courseCredit?: string;
+  courseFullName?: string;
+  courseImg?: string;
+  courseName?: string;
+  description?: string;
+  duration?: number;
 }

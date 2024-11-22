@@ -21,17 +21,19 @@ import { NftHeaderComponent } from '../../components/nft/nft-header/nft-header.c
 export class NftComponent implements OnInit {
   nft: Array<Nft>;
   nft2: Array<Nft>;
+  private apiUrl = 'http://localhost:3000/api/course/all';
+  private bearerToken = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFzc2RmZGZhc2QiLCJzdWIiOiJhc3NkZmRmYXNkIiwiaWF0IjoxNzMyMjUxODY3LCJleHAiOjM3NDE2NjQwMzMwMzEwNH0.aFwwswzdIJUj4ovqzwHp3TfIIIiagWd5gtdYB8SW6BUY'; // Replace with your actual token
 
 
   constructor() {
+
+
     this.nft = [
       {
         id: 34356771,
         title: 'Girls of the Cartoon Universe',
-        creator: 'Jhon Doe',
         instant_price: 4.2,
         price: 187.47,
-        ending_in: '06h 52m 47s',
         last_bid: 0.12,
         image: './assets/images/img-01.jpg',
         avatar: './assets/avatars/avt-01.jpg',
@@ -56,10 +58,8 @@ export class NftComponent implements OnInit {
       {
         id: 34356771,
         title: 'Girls of the Cartoon Universe',
-        creator: 'Jhon Doe',
         instant_price: 4.2,
         price: 187.47,
-        ending_in: '06h 52m 47s',
         last_bid: 0.12,
         image: './assets/images/img-01.jpg',
         avatar: './assets/avatars/avt-01.jpg',
@@ -81,7 +81,49 @@ export class NftComponent implements OnInit {
     ];
   }
 
+  ngOnInit(): void {
+    this.fetchNftData();
+  }
+
+  async fetchNftData() {
+    try {
+      const response = await fetch(this.apiUrl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${this.bearerToken}`, // Add Bearer token to headers
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const responseData = await response.json(); // Parse the JSON response
+      console.log('Fetched course data:', responseData);
+
+      this.nft = responseData.data.map((course: any) => ({
+        id: course.id,
+        title: course.title || course.courseName, // Use title or courseName as fallback
+        price: course.courseCredit, // Map courseCredit to price
+        last_bid: course.duration, // Map duration to last_bid
+        courseImg: course.courseImg, // Map courseImg to image
+        description: course.description, // Optional: Include description if needed
+      }));
+
+      console.log('Mapped NFT data:', this.nft);
+
+      // const data = await response.json(); // Parse the JSON response
+      // console.log('Fetched NFT data:', data);// Update the nft array with fetched data
+    } catch (error) {
+      console.error('Error fetching NFT data:', error);
+    }
+  }
 
 
-  ngOnInit(): void {}
+  // ngOnInit(): void {}
 }

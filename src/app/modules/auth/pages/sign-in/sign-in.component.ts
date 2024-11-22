@@ -38,15 +38,56 @@ export class SignInComponent implements OnInit {
     this.passwordTextType = !this.passwordTextType;
   }
 
+  // onSubmit() {
+  //   this.submitted = true;
+  //   const { email, password } = this.form.value;
+  //
+  //   // stop here if form is invalid
+  //   if (this.form.invalid) {
+  //     return;
+  //   }
+  //
+  //   this._router.navigate(['/']);
+  // }
   onSubmit() {
-    this.submitted = true;
-    const { email, password } = this.form.value;
+       this.submitted = true;
+       const { username, password } = this.form.value;
 
-    // stop here if form is invalid
+    // Stop if the form is invalid
     if (this.form.invalid) {
       return;
     }
 
-    this._router.navigate(['/']);
+    // Prepare the data to send
+    const requestBody = {
+      username: username,
+      password: password,
+      confirmPassword: password,
+    };
+
+    // Make the POST request
+    fetch('http://localhost:3000/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Set the content type
+      },
+      body: JSON.stringify(requestBody), // Convert requestBody to JSON
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json(); // Parse JSON response
+      })
+      .then((data) => {
+        console.log('Registration successful:', data);
+
+        // Navigate to the home page or another route
+        this._router.navigate(['/']);
+      })
+      .catch((error) => {
+        console.error('Error during registration:', error);
+      });
   }
+
 }
