@@ -5,6 +5,7 @@ import { NftChartCardComponent } from '../../components/nft/nft-chart-card/nft-c
 import { NftSingleCardComponent } from '../../components/nft/nft-single-card/nft-single-card.component';
 import { NftDualCardComponent } from '../../components/nft/nft-dual-card/nft-dual-card.component';
 import { NftHeaderComponent } from '../../components/nft/nft-header/nft-header.component';
+import { AuthService } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-nft',
@@ -22,11 +23,12 @@ export class NftComponent implements OnInit {
   nft: Array<Nft>;
   nft2: Array<Nft>;
   private apiUrl = 'http://localhost:3000/api/course/all';
-  private bearerToken = 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFzc2RmZGZhc2QiLCJzdWIiOiJhc3NkZmRmYXNkIiwiaWF0IjoxNzMyMjUxODY3LCJleHAiOjM3NDE2NjQwMzMwMzEwNH0.aFwwswzdIJUj4ovqzwHp3TfIIIiagWd5gtdYB8SW6BUY'; // Replace with your actual token
+  private bearerToken : string;
 
 
-  constructor() {
-
+  constructor(private authService: AuthService) {
+    this.bearerToken = this.authService.jwt || '';
+    console.log(this.bearerToken,"  this is working");
 
     this.nft = [
       {

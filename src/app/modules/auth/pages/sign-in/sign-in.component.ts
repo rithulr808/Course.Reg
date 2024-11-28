@@ -4,6 +4,8 @@ import { Router, RouterLink } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
+import { AuthService } from 'src/app/auth.service';
+
 
 @Component({
   selector: 'app-sign-in',
@@ -17,7 +19,7 @@ export class SignInComponent implements OnInit {
   submitted = false;
   passwordTextType!: boolean;
 
-  constructor(private readonly _formBuilder: FormBuilder, private readonly _router: Router) {}
+  constructor(private authService: AuthService, private readonly _formBuilder: FormBuilder, private readonly _router: Router) {}
 
   onClick() {
     console.log('Button clicked');
@@ -38,20 +40,10 @@ export class SignInComponent implements OnInit {
     this.passwordTextType = !this.passwordTextType;
   }
 
-  // onSubmit() {
-  //   this.submitted = true;
-  //   const { email, password } = this.form.value;
-  //
-  //   // stop here if form is invalid
-  //   if (this.form.invalid) {
-  //     return;
-  //   }
-  //
-  //   this._router.navigate(['/']);
-  // }
   onSubmit() {
        this.submitted = true;
-       const { username, password } = this.form.value;
+       const { email, password } = this.form.value;
+
 
     // Stop if the form is invalid
     if (this.form.invalid) {
@@ -60,13 +52,13 @@ export class SignInComponent implements OnInit {
 
     // Prepare the data to send
     const requestBody = {
-      username: username,
-      password: password,
-      confirmPassword: password,
+      "username": email,
+      "password": password,
+      "confirmPassword": password
     };
 
     // Make the POST request
-    fetch('http://localhost:3000/auth/register', {
+    fetch('http://localhost:3000/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // Set the content type
@@ -80,13 +72,18 @@ export class SignInComponent implements OnInit {
         return response.json(); // Parse JSON response
       })
       .then((data) => {
-        console.log('Registration successful:', data);
+        console.log('login successful:', data['data']);
+        this.authService.jwt = data['data'];
+        console.log('auth cred',this.authService.jwt);
+
 
         // Navigate to the home page or another route
         this._router.navigate(['/']);
       })
       .catch((error) => {
         console.error('Error during registration:', error);
+
+        this._router.navigate(['/errors/404']);
       });
   }
 
