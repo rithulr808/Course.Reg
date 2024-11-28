@@ -13,5 +13,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 export class TableRowComponent {
   @Input() user: User = <User>{};
 
+
+
   constructor() {}
 }

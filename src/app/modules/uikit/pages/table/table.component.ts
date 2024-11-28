@@ -1,13 +1,14 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { User } from './model/user.model';
 import { FormsModule } from '@angular/forms';
 import { TableHeaderComponent } from './components/table-header/table-header.component';
 import { TableFooterComponent } from './components/table-footer/table-footer.component';
 import { TableRowComponent } from './components/table-row/table-row.component';
-import { TableActionComponent } from './components/table-action/table-action.component';
+import { TableActionComponent, SearchService } from './components/table-action/table-action.component';
 import { toast } from 'ngx-sonner';
+import { NgForOf, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-table',
@@ -19,12 +20,27 @@ import { toast } from 'ngx-sonner';
     TableFooterComponent,
     TableRowComponent,
     TableActionComponent,
+    NgForOf,
+    NgIf,
   ],
   templateUrl: './table.component.html',
   styleUrl: './table.component.scss',
 })
-
 export class TableComponent implements OnInit {
+  selectedUser: User | null = null; // To hold the user selected for details
+  showModal: boolean = false; // To control the modal visibility
+
+  // Method to open the modal with user details
+  openUserDetails(user: User) {
+    this.selectedUser = user; // Set the selected user
+    this.showModal = true; // Show the modal
+  }
+
+  // Method to close the modal
+  closeModal() {
+    this.showModal = false; // Hide the modal
+    this.selectedUser = null; // Clear selected user
+  }
   // users = signal<User[]>([]);
   users = signal<User[]>([
     {
@@ -86,7 +102,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -109,53 +126,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
-      id: 2,
-      name: 'Jane Smith',
-      age: 34,
-      username: 'jane_smith',
-      email: 'janesmith@example.com',
-      phone: '987-654-3210',
-      website: 'https://janesmith.com',
-      occupation: 'Graphic Designer',
-      hobbies: ['Photography', 'Art', 'Gaming'],
-      selected: false, // Added 'selected' property
     },
     {
-      id: 3,
-      name: 'David Johnson',
-      age: 45,
-      username: 'david_johnson',
-      email: 'davidjohnson@example.com',
-      phone: '555-123-4567',
-      website: 'https://davidjohnson.com',
-      occupation: 'Project Manager',
-      hobbies: ['Hiking', 'Writing', 'Cycling'],
-      selected: false, // Added 'selected' property
-    },   {
-      id: 2,
-      name: 'Jane Smith',
-      age: 34,
-      username: 'jane_smith',
-      email: 'janesmith@example.com',
-      phone: '987-654-3210',
-      website: 'https://janesmith.com',
-      occupation: 'Graphic Designer',
-      hobbies: ['Photography', 'Art', 'Gaming'],
-      selected: false, // Added 'selected' property
-    },
-    {
-      id: 3,
-      name: 'David Johnson',
-      age: 45,
-      username: 'david_johnson',
-      email: 'davidjohnson@example.com',
-      phone: '555-123-4567',
-      website: 'https://davidjohnson.com',
-      occupation: 'Project Manager',
-      hobbies: ['Hiking', 'Writing', 'Cycling'],
-      selected: false, // Added 'selected' property
-    },   {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -202,7 +174,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -225,7 +198,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -248,7 +222,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -271,7 +246,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -294,7 +270,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -317,7 +294,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -340,7 +318,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -363,7 +342,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -386,7 +366,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -409,7 +390,8 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -432,7 +414,56 @@ export class TableComponent implements OnInit {
       occupation: 'Project Manager',
       hobbies: ['Hiking', 'Writing', 'Cycling'],
       selected: false, // Added 'selected' property
-    },   {
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      age: 34,
+      username: 'jane_smith',
+      email: 'janesmith@example.com',
+      phone: '987-654-3210',
+      website: 'https://janesmith.com',
+      occupation: 'Graphic Designer',
+      hobbies: ['Photography', 'Art', 'Gaming'],
+      selected: false, // Added 'selected' property
+    },
+    {
+      id: 3,
+      name: 'David Johnson',
+      age: 45,
+      username: 'david_johnson',
+      email: 'davidjohnson@example.com',
+      phone: '555-123-4567',
+      website: 'https://davidjohnson.com',
+      occupation: 'Project Manager',
+      hobbies: ['Hiking', 'Writing', 'Cycling'],
+      selected: false, // Added 'selected' property
+    },
+    {
+      id: 2,
+      name: 'Jane Smith',
+      age: 34,
+      username: 'jane_smith',
+      email: 'janesmith@example.com',
+      phone: '987-654-3210',
+      website: 'https://janesmith.com',
+      occupation: 'Graphic Designer',
+      hobbies: ['Photography', 'Art', 'Gaming'],
+      selected: false, // Added 'selected' property
+    },
+    {
+      id: 3,
+      name: 'David Johnson',
+      age: 45,
+      username: 'david_johnson',
+      email: 'davidjohnson@example.com',
+      phone: '555-123-4567',
+      website: 'https://davidjohnson.com',
+      occupation: 'Project Manager',
+      hobbies: ['Hiking', 'Writing', 'Cycling'],
+      selected: false, // Added 'selected' property
+    },
+    {
       id: 2,
       name: 'Jane Smith',
       age: 34,
@@ -467,10 +498,10 @@ export class TableComponent implements OnInit {
       occupation: 'Content Writer',
       hobbies: ['Blogging', 'Reading', 'Yoga'],
       selected: false, // Added 'selected' property
-    }
+    },
   ]);
 
-  constructor(private http: HttpClient) {
+  constructor(private searchService: SearchService) {
     // this.http.get<User[]>('https://localhost:3000').subscribe({
     //   next: (data) => this.users.set(data),
     //   error: (error) => this.handleRequestError(error),
@@ -485,18 +516,21 @@ export class TableComponent implements OnInit {
     });
   }
 
-  private handleRequestError(error: any) {
-    const msg = 'An error occurred while fetching users';
-    toast.error(msg, {
-      position: 'bottom-right',
-      description: error.message,
-      action: {
-        label: 'Undo',
-        onClick: () => console.log('Action!'),
-      },
-      actionButtonStyle: 'background-color:#DC2626; color:white;',
+  originalUsers: User[] = []; // Store the original data separately
+
+  ngOnInit() {
+    // Initialize original data, this is used for resetting
+    this.originalUsers = [...this.users()];
+
+    // Apply the filter whenever the search query changes
+    this.searchService.searchQuery$.subscribe((query) => {
+      const filtered = this.originalUsers.filter(
+        (user: User) =>
+          user.name.toLowerCase().includes(query.toLowerCase()) || // Search by name
+          user.email.toLowerCase().includes(query.toLowerCase()), // Or email
+      );
+      this.users.set(filtered); // Update the 'users' signal with filtered results
+      console.log(filtered); // For debugging, make sure it's filtering correctly
     });
   }
-
-  ngOnInit() {}
 }
